@@ -29,11 +29,11 @@ function App() {
     link: "",
   });
   const [isInfoToolTipOpen, setIsInfoToolTipOpen] = useState(false);
+  const [infoTooltipType, setInfoTooltipType] = useState('');
   const [cards, setCards] = useState([]);
 
   const [currentUser, setCurrentUser] = useState({});
 
-  const [tooltipStatus, setTooltipStatus] = useState("");
   const [email, setEmail] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isCheckingToken, setIsCheckingToken] = useState(true);
@@ -187,17 +187,17 @@ function App() {
     .register(email, password)
     .then((res) => {
       if (res.data._id) {
-        setTooltipStatus("success");
+        setInfoTooltipType("success");
         setIsInfoToolTipOpen(true);
         history.push("/signin")
       } else {
         //invalid data
-        setTooltipStatus("fail");
+        setInfoTooltipType("fail");
         setIsInfoToolTipOpen(true);
       }
     })
     .catch((err) => {
-      setTooltipStatus("fail");
+      setInfoTooltipType("fail");
       setIsInfoToolTipOpen(true);
     })
   };
@@ -215,12 +215,12 @@ function App() {
         history.push("/"); 
       } else {
         //invalid data
-        setTooltipStatus("fail");
+        setInfoTooltipType("fail");
         setIsInfoToolTipOpen(true);
       }
     })
     .catch((err) => {
-      setTooltipStatus("fail");
+      setInfoTooltipType("fail");
       setIsInfoToolTipOpen(true);
     })
   };
@@ -257,13 +257,11 @@ function App() {
           <Route path="/signup">
             <Register
             onRegister={onRegister}
-            tooltipStatus={tooltipStatus}
             />
           </Route>
           <Route path="/signin">
             <Login
             onLogin={onLogin}
-            tooltipStatus={tooltipStatus}
             setIsCheckingToken={setIsCheckingToken}
             />
           </Route>
@@ -309,6 +307,7 @@ function App() {
         <InfoToolTip
         isOpen={isInfoToolTipOpen}
         onClose={closeAllModals}
+        type={infoTooltipType}
         />
       </div>
     </div>

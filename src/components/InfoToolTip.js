@@ -1,15 +1,21 @@
-import React from "react";
+import React, { useEffect } from "react";
 import closeButton from "../images/Close-Icon.svg";
 import successIcon from "../images/success.svg";
 import errorIcon from "../images/fail.svg";
 
-const InfoToolTip = ({isOpen, onClose, status}) => {
+const InfoToolTip = ({ isOpen, onClose, type }) => {
+  const success = type === "success";
+
+  useEffect(() => {
+    if (isOpen) {
+      const timer = setTimeout(() => {
+        onClose();
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen, onClose]);
   return (
-    <div
-      className={`modal modal_type_info ${
-        isOpen ? "modal_opened" : ""
-      }`}
-    >
+    <div className={`modal modal_type_info ${isOpen ? "modal_opened" : ""}`}>
       <div className="modal__content">
         <button
           className="modal__close-btn"
@@ -23,20 +29,21 @@ const InfoToolTip = ({isOpen, onClose, status}) => {
             alt="closing icon"
           />
         </button>
-        {status === "success" ? (
-            <div>
-                <img className="modal__icon" src={successIcon} alt="success-sign"/>
-                <p className="modal__status-message">Success! You have now been registered.</p>
-            </div>
-        ) : (
-            <div>
-                <img className="modal__icon" src={errorIcon} alt="fail-sign"/>
-                <p className="modal__status-message">Oops, something went wrong! Please try again.</p>
-            </div>
-        )}
+        <div>
+          <img
+            className="modal__icon"
+            src={success ? successIcon : errorIcon}
+            alt="success-sign"
+          />
+          <p className="modal__status-message">
+            {success ? 'Success! You have now been registered.'
+             : 
+             'Oops, something went wrong! Please try again.'}
+          </p>
+        </div>
       </div>
     </div>
   );
-};
+  };
 
 export default InfoToolTip;
