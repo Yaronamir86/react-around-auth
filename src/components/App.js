@@ -11,7 +11,12 @@ import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
 import Login from "./Login";
-import { Switch, Route, useHistory, Redirect } from "react-router-dom/cjs/react-router-dom.min";
+import {
+  Switch,
+  Route,
+  useHistory,
+  Redirect,
+} from "react-router-dom/cjs/react-router-dom.min";
 import ProtectedRoute from "./ProtectedRoute";
 import Register from "./Register";
 import InfoToolTip from "./InfoToolTip";
@@ -29,7 +34,7 @@ function App() {
     link: "",
   });
   const [isInfoToolTipOpen, setIsInfoToolTipOpen] = useState(false);
-  const [infoTooltipType, setInfoTooltipType] = useState('');
+  const [infoTooltipType, setInfoTooltipType] = useState("");
   const [cards, setCards] = useState([]);
 
   const [currentUser, setCurrentUser] = useState({});
@@ -42,7 +47,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
 
   //const [userData, setUserData] = useState({
-   // email: 'email@mail.com',
+  // email: 'email@mail.com',
   //});
 
   /*-----OPEN/CLOSE--HANDLERS-----------------*/
@@ -74,23 +79,27 @@ function App() {
     setSelectedCard(false);
     setPreviewImageOpen(false);
     setDeletePopupOpen(false);
-    setIsInfoToolTipOpen(false)
+    setIsInfoToolTipOpen(false);
   };
 
   /*------------SETTING INFO USING API-------------*/
 
   useEffect(() => {
-    api.getUserInfo().then((user) => {
-      setCurrentUser(user);
-    })
-    .catch(console.log);
+    api
+      .getUserInfo()
+      .then((user) => {
+        setCurrentUser(user);
+      })
+      .catch(console.log);
   }, []);
 
   useEffect(() => {
-    api.getInitialCards().then((res) => {
-      setCards(res);
-    })
-    .catch(console.log);
+    api
+      .getInitialCards()
+      .then((res) => {
+        setCards(res);
+      })
+      .catch(console.log);
   }, []);
 
   /*--------------------API-EDIT-HANDLERS----------------------*/
@@ -111,26 +120,30 @@ function App() {
 
   const handleUpdateAvatar = (url) => {
     setIsLoading(true);
-    api.editAvatar(url).then((res) => {
-      setCurrentUser(res);
-      closeAllModals();
-    })
-    .catch(console.log)
-    .finally(() => {
-      setIsLoading(false);
-    });
+    api
+      .editAvatar(url)
+      .then((res) => {
+        setCurrentUser(res);
+        closeAllModals();
+      })
+      .catch(console.log)
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   const handleCardLike = (card) => {
     const isLiked = card.likes.some((user) => user._id === currentUser._id);
-    api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
-      setCards((state) =>
-        state.map((currentCard) =>
-          currentCard._id === card._id ? newCard : currentCard
-        )
-      );
-    })
-    .catch(console.log);
+    api
+      .changeLikeCardStatus(card._id, !isLiked)
+      .then((newCard) => {
+        setCards((state) =>
+          state.map((currentCard) =>
+            currentCard._id === card._id ? newCard : currentCard
+          )
+        );
+      })
+      .catch(console.log);
   };
 
   const handleCardDelete = (e) => {
@@ -153,11 +166,13 @@ function App() {
 
   const handleAddPlace = (card) => {
     setIsLoading(true);
-    api.createCards(card).then((card) => {
-      setCards([card, ...cards]);
-      closeAllModals();
-    })
-    .catch(console.log)
+    api
+      .createCards(card)
+      .then((card) => {
+        setCards([card, ...cards]);
+        closeAllModals();
+      })
+      .catch(console.log)
       .finally(() => {
         setIsLoading(false);
       });
@@ -167,63 +182,62 @@ function App() {
     const token = localStorage.getItem("jwt");
     if (token) {
       auth
-      .checkToken(token)
+        .checkToken(token)
+        .then((res) => {
+          if (res) {
+            setEmail(res.data.email);
+            setIsLoggedIn(true);
+            history.push("/");
+          } else {
+            localStorage.removeItem("jwt");
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [history]);
+
+  function onRegister({ email, password }) {
+    auth
+      .register(email, password)
       .then((res) => {
-        if (res) {
-          setEmail(res.data.email);
-          setIsLoggedIn(true);
-          history.push("/");
+        if (res.data._id) {
+          setInfoTooltipType("success");
+          history.push("/signin");
         } else {
-          localStorage.removeItem("jwt");
+          //invalid data
+          setInfoTooltipType("fail");
         }
       })
-      .catch((err) => console.log(err))
-    }
-  },
-  [history]);
-
-  function onRegister({email, password}) {
-    auth
-    .register(email, password)
-    .then((res) => {
-      if (res.data._id) {
-        setInfoTooltipType("success");
+      .catch((err) => {
+        setInfoTooltipType("fail");
+      })
+      .finally((res) => {
         setIsInfoToolTipOpen(true);
-        history.push("/signin")
-      } else {
-        //invalid data
+      });
+  }
+
+  function onLogin({ email, password }) {
+    auth
+      .login(email, password)
+      .then((res) => {
+        if (res.token) {
+          setIsLoggedIn(true);
+          setEmail(email);
+          //when the 'onLogin()' handler is called the jwt is saved
+          localStorage.setItem("jwt", res.token);
+          //after successful authorization, the user is redirected to "/"
+          history.push("/");
+        } else {
+          //invalid data
+          setInfoTooltipType("fail");
+          setIsInfoToolTipOpen(true);
+        }
+      })
+      .catch((err) => {
         setInfoTooltipType("fail");
         setIsInfoToolTipOpen(true);
-      }
-    })
-    .catch((err) => {
-      setInfoTooltipType("fail");
-      setIsInfoToolTipOpen(true);
-    })
-  };
-
-  function onLogin({email, password}) {
-    auth
-    .login(email, password)
-    .then((res) => {
-      if (res.token) {
-        setIsLoggedIn(true);
-        setEmail(email);
-        //when the 'onLogin()' handler is called the jwt is saved
-        localStorage.setItem("jwt", res.token);
-        //after successful authorization, the user is redirected to "/"
-        history.push("/"); 
-      } else {
-        //invalid data
-        setInfoTooltipType("fail");
-        setIsInfoToolTipOpen(true);
-      }
-    })
-    .catch((err) => {
-      setInfoTooltipType("fail");
-      setIsInfoToolTipOpen(true);
-    })
-  };
+      });
+  }
 
   function onSignOut() {
     //when the 'onSignOut()' handler is call, the jwt is deleted
@@ -236,42 +250,36 @@ function App() {
     <div className="App">
       <div className="page">
         <CurrentUserContext.Provider value={currentUser}>
-          <Header 
-          onSignOut={onSignOut}
-          isLoggedIn={isLoggedIn}
-          email={email}/>
+          <Header onSignOut={onSignOut} isLoggedIn={isLoggedIn} email={email} />
           <Switch>
-            <ProtectedRoute exact path="/" 
-            loggedIn={isLoggedIn}
-            isCheckingToken={isCheckingToken}>
-          <Main
-            onEditProfileClick={handleEditProfileClick}
-            onAddPlaceClick={handleAddPlaceClick}
-            onEditAvatarClick={handleEditAvatarClick}
-            onCardClick={handleCardClick}
-            onCardLike={handleCardLike}
-            onCardDelete={handleDeleteCardClick}
-            cards={cards}
-          />
-          </ProtectedRoute>
-          <Route path="/signup">
-            <Register
-            onRegister={onRegister}
-            />
-          </Route>
-          <Route path="/signin">
-            <Login
-            onLogin={onLogin}
-            setIsCheckingToken={setIsCheckingToken}
-            />
-          </Route>
-          <Route>
-            {isLoggedIn ? (
-              <Redirect to="/" />
-            ) : (
-              <Redirect to="/signin" />
-              )}
-          </Route>
+            <ProtectedRoute
+              exact
+              path="/"
+              loggedIn={isLoggedIn}
+              isCheckingToken={isCheckingToken}
+            >
+              <Main
+                onEditProfileClick={handleEditProfileClick}
+                onAddPlaceClick={handleAddPlaceClick}
+                onEditAvatarClick={handleEditAvatarClick}
+                onCardClick={handleCardClick}
+                onCardLike={handleCardLike}
+                onCardDelete={handleDeleteCardClick}
+                cards={cards}
+              />
+            </ProtectedRoute>
+            <Route path="/signup">
+              <Register onRegister={onRegister} />
+            </Route>
+            <Route path="/signin">
+              <Login
+                onLogin={onLogin}
+                setIsCheckingToken={setIsCheckingToken}
+              />
+            </Route>
+            <Route>
+              {isLoggedIn ? <Redirect to="/" /> : <Redirect to="/signin" />}
+            </Route>
           </Switch>
           <Footer />
 
@@ -300,14 +308,15 @@ function App() {
           />
           <AddPlacePopup
             isOpen={isAddPlaceOpen}
+            isLoading={isLoading}
             onClose={closeAllModals}
             onAddPlaceSubmit={handleAddPlace}
           />
         </CurrentUserContext.Provider>
         <InfoToolTip
-        isOpen={isInfoToolTipOpen}
-        onClose={closeAllModals}
-        type={infoTooltipType}
+          isOpen={isInfoToolTipOpen}
+          onClose={closeAllModals}
+          type={infoTooltipType}
         />
       </div>
     </div>

@@ -10,9 +10,9 @@ const EditProfileModal = ({ isOpen, onClose, onUpdateUser, isLoading }) => {
   const [description, setDescription] = useState("");
 
   useEffect(() => {
-    setName(currentUser.name || '');
-    setDescription(currentUser.about || '');
-  }, [currentUser]);
+    setName(currentUser.name || "");
+    setDescription(currentUser.about || "");
+  }, [currentUser, isOpen]);
 
   const handleNameChange = (e) => {
     setName(e.target.value);

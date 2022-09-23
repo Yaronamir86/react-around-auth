@@ -24,7 +24,6 @@ const PopupWithForm = (props) => {
           action="submit"
           className="form"
           name={props.name}
-          noValidate
           autoComplete="off"
           onSubmit={props.onSubmit}
         >
