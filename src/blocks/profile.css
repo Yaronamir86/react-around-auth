@@ -10,6 +10,9 @@
   max-width: 122px;
   max-height: 122px;
   position: relative;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
   z-index: 1;
 }
 
