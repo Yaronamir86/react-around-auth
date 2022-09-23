@@ -2,7 +2,7 @@ export const BASE_URL = "https://register.nomoreparties.co";
 
 const customFetch = (url, headers) => {
   return fetch(url, headers).then((res) => {
-   return res.ok ? res.json() : Promise.reject(res.statusText);
+    return res.ok ? res.json() : Promise.reject(res.statusText);
   });
 };
 
@@ -26,7 +26,7 @@ export const login = (email, password) => {
     },
     body: JSON.stringify({ email, password }),
   }).then((data) => {
-    localStorage.setItem("jwt", data.jwt);
+    //localStorage.setItem("jwt", data.jwt);
     localStorage.setItem("email", email);
     return data;
   });

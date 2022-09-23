@@ -25,7 +25,7 @@ function Register({ onRegister }) {
             placeholder="Email"
             className="register__input register__input_type_email"
             onChange={(e) => setEmail(e.target.value)}
-            value={Register.email}
+            value={email}
             autoComplete="on"
             required
           />
@@ -38,7 +38,7 @@ function Register({ onRegister }) {
             minLength="6"
             maxLength="12"
             onChange={(e) => setPassword(e.target.value)}
-            value={Register.password}
+            value={password}
             required
           />
         </fieldset>

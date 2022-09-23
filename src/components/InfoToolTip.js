@@ -36,14 +36,14 @@ const InfoToolTip = ({ isOpen, onClose, type }) => {
             alt="success-sign"
           />
           <p className="modal__status-message">
-            {success ? 'Success! You have now been registered.'
-             : 
-             'Oops, something went wrong! Please try again.'}
+            {success
+              ? "Success! You have now been registered."
+              : "Oops, something went wrong! Please try again."}
           </p>
         </div>
       </div>
     </div>
   );
-  };
+};
 
 export default InfoToolTip;

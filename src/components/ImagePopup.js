@@ -23,7 +23,7 @@ const ImagePopup = (props) => {
         <img
           className="modal__image modal__image_type_preview"
           src={props.card.link}
-          alt="#"
+          alt={`a beautiful place in ${props.card.name}`}
         />
         <p className="modal__title modal__title_type_preview">
           {props.card.name}

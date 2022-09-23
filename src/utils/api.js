@@ -1,4 +1,4 @@
- class Api {
+class Api {
   constructor({ baseUrl, headers }) {
     this._baseUrl = baseUrl;
     this._headers = headers;
@@ -22,7 +22,7 @@
     });
   }
 
-  editProfile({name, about}) {
+  editProfile({ name, about }) {
     return this._customFetch(`${this._baseUrl}/users/me`, {
       headers: this._headers,
       method: "PATCH",
@@ -58,15 +58,13 @@
     });
   }
 
-
-  changeLikeCardStatus(cardId, isLiked){
+  changeLikeCardStatus(cardId, isLiked) {
     if (isLiked) {
       return this._customFetch(`${this._baseUrl}/cards/likes/${cardId}`, {
         headers: this._headers,
         method: "PUT",
       });
-    }
-    else {
+    } else {
       return this._customFetch(`${this._baseUrl}/cards/likes/${cardId}`, {
         headers: this._headers,
         method: "DELETE",
@@ -75,7 +73,7 @@
   }
 }
 
-  const api = new Api({
+const api = new Api({
   baseUrl: "https://around.nomoreparties.co/v1/cohort-3-en",
   headers: {
     authorization: "a42b1115-c728-4ed0-ac26-3d3a2cd8e95d",

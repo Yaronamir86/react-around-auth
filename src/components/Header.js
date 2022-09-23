@@ -8,8 +8,8 @@ function Header({ onSignOut, email }) {
   return (
     <header className="Header">
       <div className="header__wrapper">
+      <img className="header__logo" src={logo} alt="around the u.s logo" />
         <Route exact path="/">
-          <img className="header__logo" src={logo} alt="around the u.s logo" />
           <div className="header__content">
             <p className="header__user">{email}</p>
             <button className="header__logout" onClick={handleSignOut}>
@@ -18,13 +18,11 @@ function Header({ onSignOut, email }) {
           </div>
         </Route>
         <Route path="/signup">
-          <img className="header__logo" src={logo} alt="around the u.s logo" />
           <Link className="header__auth-link" to="signin">
             Sign in
           </Link>
         </Route>
         <Route path="/signin">
-          <img className="header__logo" src={logo} alt="around the u.s logo" />
           <Link className="header__auth-link" to="signup">
             Sign up
           </Link>

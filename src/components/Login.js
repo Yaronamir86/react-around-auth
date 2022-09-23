@@ -27,7 +27,7 @@ function Login({ onLogin }) {
             className="login__input login__input_type_email"
             minLength="2"
             maxLength="40"
-            value={Login.email}
+            value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
@@ -39,7 +39,7 @@ function Login({ onLogin }) {
             className="login__input login__input_type__password"
             minLength="2"
             maxLength="12"
-            value={Login.password}
+            value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
