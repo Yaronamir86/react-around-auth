@@ -102,6 +102,7 @@
   height: 50px;
   align-self: center;
   justify-self: flex-end;
+  border: none;
 }
 
 .profile__add-btn:hover {

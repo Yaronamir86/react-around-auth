@@ -118,7 +118,7 @@ function App() {
       });
   };
 
-  const handleUpdateAvatar = (url) => {
+  const handleUpdateAvatar = (url, token) => {
     setIsLoading(true);
     api
       .editAvatar(url)
@@ -135,7 +135,7 @@ function App() {
   const handleCardLike = (card) => {
     const isLiked = card.likes.some((user) => user._id === currentUser._id);
     api
-      .changeLikeCardStatus(card._id, !isLiked)
+      .changeLikeCardStatus(card._id, isLiked)
       .then((newCard) => {
         setCards((state) =>
           state.map((currentCard) =>
@@ -151,7 +151,7 @@ function App() {
     setIsLoading(true);
     api
       .deleteCards(selectedCard._id)
-      .then((res) => {
+      .then((cards) => {
         const newCards = cards.filter(
           (currentCard) => currentCard._id !== selectedCard._id
         );
@@ -178,6 +178,7 @@ function App() {
       });
   };
 
+  //CHECK TOKEN
   useEffect(() => {
     const token = localStorage.getItem("jwt");
     if (token) {
